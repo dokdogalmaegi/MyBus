@@ -66,23 +66,29 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         try {
-                            System.out.println(jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg1"));
-                            System.out.println(jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg2"));
-                            System.out.println(jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("stNm"));
-                            System.out.println(jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arsId"));
+
+                            String arrmsg1 = jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg1").toString();
+                            String arrmsg2 = jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg2").toString();
+                            String stNm = jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("stNm").toString();
+                            String arsId = jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arsId").toString();
+
+                            System.out.println(arrmsg1);
+                            System.out.println(arrmsg2);
+                            System.out.println(stNm);
+                            System.out.println(arsId);
 
                             intent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
                             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 Notification.BigTextStyle test = new Notification.BigTextStyle();
 
-                                test.bigText(jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg1").toString() + "\n" + jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg2").toString());
+                                test.bigText(arrmsg1 + "\n" + arrmsg2);
 
                                 Notification.Builder builder = new Notification.Builder(getApplicationContext(), "busbus")
                                         .setSmallIcon(R.drawable.ic_stat_name)
                                         .setStyle(test)
-                                        .setContentTitle(jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("stNm").toString())
-                                        .setContentText(jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg1").toString() + "\n" + jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg2").toString())
+                                        .setContentTitle(stNm)
+                                        .setContentText(arrmsg1 + "\n" + arrmsg2)
                                         .setTicker("한줄 출력")
                                         .setContentIntent(intent);
 
@@ -95,16 +101,13 @@ public class MainActivity extends AppCompatActivity {
                                 NotificationManager notificationManager = getSystemService(NotificationManager.class);
                                 notificationManager.createNotificationChannel(channel);
 
+                                if(arrmsg1.contains("5분") || arrmsg1.contains("6분") || arrmsg1.contains("곧") || arrmsg2.contains("5분") || arrmsg2.contains("6분") || arrmsg2.contains("곧"))
                                 notificationManager.notify(0, builder.build());
                             }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
-//                    runOnUiThread(() -> {
-//                        Toast.makeText(MainActivity.this, busText, Toast.LENGTH_LONG).show();
-//                    });
                     });
                     getBusThread.start();
                 } else System.out.println(getTime());
