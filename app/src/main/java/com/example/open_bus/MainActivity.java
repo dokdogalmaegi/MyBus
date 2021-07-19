@@ -9,6 +9,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,7 @@ import org.json.JSONObject;
 import org.json.XML;
 
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     String busText = "ㅋㅋ 이러면 버스 정보 올줄 알았냐 ㅋㅋ";
     JSONObject jsonObj;
     Timer timer;
+    TextView noticeTitle;
+    String result = "텍스트입니다.";
 
     public void startTimer() {
         TimerTask timerTask = new TimerTask() {
@@ -66,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         try {
-
                             String arrmsg1 = jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg1").toString();
                             String arrmsg2 = jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg2").toString();
                             String stNm = jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("stNm").toString();
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                                 test.bigText(arrmsg1 + "\n" + arrmsg2);
 
                                 Notification.Builder builder = new Notification.Builder(getApplicationContext(), "busbus")
-                                        .setSmallIcon(R.drawable.ic_stat_name)
+                                        .setSmallIcon(R.drawable.bus_eyes)
                                         .setStyle(test)
                                         .setContentTitle(stNm)
                                         .setContentText(arrmsg1 + "\n" + arrmsg2)
@@ -135,7 +138,40 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         startMainService();
 
-        Button TestBtn = findViewById(R.id.APIBtn);
+        noticeTitle = findViewById(R.id.noticeTitle);
+
+        Thread startGetBus = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                busText = getBus();
+
+                try {
+                    jsonObj = XML.toJSONObject(busText);
+                } catch (JSONException e) {
+                    System.out.println("API 에러 입니다.");
+                    e.printStackTrace();
+                }
+
+                try {
+                    if(jsonObj.getJSONObject("ServiceResult").getJSONObject("msgBody").getJSONArray("itemList").getJSONObject(5).get("arrmsg1").toString().equals("운행종료")) {
+                        result = "현재 버스가 운행종료 되었습니다.";
+                        System.out.println(result);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        startGetBus.start();
+        try {
+            startGetBus.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        noticeTitle.setText(result);
+
         ToggleButton toggleBtn = findViewById(R.id.toggleBtn);
 
         toggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -143,9 +179,10 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(toggleBtn.isChecked()) {
                     startTimer();
-
+                    toggleBtn.setBackgroundResource(R.drawable.bus_eyes);
                 } else {
                     stopTimer();
+                    toggleBtn.setBackgroundResource(R.drawable.bus_eyes_close);
                 }
             }
         });
