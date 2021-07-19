@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">OPEN_BUS</string>
+    <string name="channel_name">BUS_NOTIFICATION</string>
+    <string name="channel_description">BUS_DESCRIPTION</string>
 </resources>

@@ -13,6 +13,13 @@
         android:layout_height="wrap_content"
         android:text="테스트 버튼"
         android:layout_centerHorizontal="true"
+        />
+
+    <ToggleButton
+        android:id="@+id/toggleBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         />
 
