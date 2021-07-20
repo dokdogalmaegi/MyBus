@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     JSONObject jsonObj;
     Timer timer;
     TextView noticeTitle;
-    String result = "텍스트입니다.";
+    String result = "현재 버스가 운행중입니다.";
 
     public void startTimer() {
         TimerTask timerTask = new TimerTask() {
@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     getBusThread.start();
-                } else System.out.println(getTime());
+                }
             }
         };
 
