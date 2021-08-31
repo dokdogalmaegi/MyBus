@@ -17,13 +17,10 @@ public class BusForegroundService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        System.out.println("Test 입니다.");
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        System.out.println("Test 입니다.ㄴㅇㅇㅇ");
         return super.onStartCommand(intent, flags, startId);
     }
 }
